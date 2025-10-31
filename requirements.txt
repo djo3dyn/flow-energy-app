@@ -1,0 +1,14 @@
+# Core web framework
+Flask==3.0.3
+
+# GPIO handling for Orange Pi / Raspberry Pi
+wiringpi==2.60.1
+
+# MQTT client library
+paho-mqtt==1.6.1
+
+# Modbus RTU communication
+pymodbus==3.6.8
+
+# For serial communication (used internally by pymodbus)
+pyserial==3.5
