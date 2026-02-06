@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flow & Power Monitor</title>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="3">
+    <style>
+        body { font-family: Arial; background:#111; color:#eee; }
+        h1 { color:#0f9; }
+        table { border-collapse: collapse; width: 420px; }
+        td { padding: 6px 10px; border-bottom: 1px solid #333; }
+        .label { color:#aaa; }
+        .value { text-align:right; font-weight:bold; }
+    </style>
+</head>
+<body>
+
+<h1>Flow & Power Monitor</h1>
+
+<table>
+<tr><td class="label">Flow Rate</td><td class="value">{{ flow.flow_lpm }} L/min</td></tr>
+<tr><td class="label">Total Volume</td><td class="value">{{ flow.total_liters }} L</td></tr>
+
+<tr><td class="label">Avg Phase Voltage</td><td class="value">{{ pm.avg_phase_voltage }} V</td></tr>
+<tr><td class="label">Phase A Current</td><td class="value">{{ pm.a_phase_current }} A</td></tr>
+<tr><td class="label">Phase B Current</td><td class="value">{{ pm.b_phase_current }} A</td></tr>
+<tr><td class="label">Phase C Current</td><td class="value">{{ pm.c_phase_current }} A</td></tr>
+
+<tr><td class="label">Active Power</td><td class="value">{{ pm.total_active_power }} kW</td></tr>
+<tr><td class="label">Reactive Power</td><td class="value">{{ pm.total_reactive_power }} kvar</td></tr>
+<tr><td class="label">Energy (+)</td><td class="value">{{ pm.total_pos_active_energy }} kWh</td></tr>
+<tr><td class="label">Grid Frequency</td><td class="value">{{ pm.frequency }} Hz</td></tr>
+</table>
+
+</body>
+</html>

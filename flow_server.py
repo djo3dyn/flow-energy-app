@@ -122,12 +122,10 @@ def nextion_update_all():
 # GPIO interrupt handler
 # -------------------------------
 def pulse_detected():
-    global pulse_count, last_pulse
-    now = wiringpi.micros()
-    if now - last_pulse > DEBOUNCE_US:
-        with state_lock:
-            pulse_count += 1
-        last_pulse = now
+    global pulse_count
+    with state_lock:
+        pulse_count += 1
+    print(".", end="")
 
 # -------------------------------
 # Measurement loop

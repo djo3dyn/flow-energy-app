@@ -3,10 +3,11 @@ import threading
 import json
 import time
 import logging
-from flask import Flask, jsonify
+from xmlrpc import client
+from flask import Flask, jsonify , render_template
 from flow_server import start_flow_server, update_metrics_from_pm , get_flow_data
 from power_meter_server import loop_powermeter , get_pm_data
-from mqtt_publisher import connect_mqtt, publish_data
+from mqtt_publisher import MQTT_KEEPALIVE, connect_mqtt, publish_data
 #import serial
 
 
@@ -39,6 +40,14 @@ def api_flow_data():
     return jsonify(get_flow_data())
 
 # -------------------------------
+# Dashboard route
+# -------------------------------
+
+@app.route("/")
+def dashboard():
+    return render_template("dashboard.html", flow=get_flow_data(), pm=get_pm_data())
+
+# -------------------------------
 # Power meter polling thread
 # -------------------------------
 def pm_thread():
@@ -58,46 +67,13 @@ def pm_thread():
 # -------------------------------
 # Nextion HMI
 # -------------------------------
-"""
-# Nextion command terminator
-END_COMMAND = b'\xFF\xFF\xFF'
 
-ser = serial.Serial(
-    port='/dev/ttyS5',
-    baudrate=9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1
-)
-
-def nextion_send_command(cmd_str):
-    #Sends a command to the Nextion display
-    ser.write(command.encode('utf-8') + END_COMMAND)
-
-def nextion_update_all():
-    with state_lock:
-        f = frequency
-        fl = flow_lpm
-        tot = total_liters
-        pw = power_kw
-        en = energy_kwh
-
-    try:
-        nextion_send_command(f'{NEXTION_FIELDS["freq"]}.txt="{f:.2f} Hz"')
-        nextion_send_command(f'{NEXTION_FIELDS["flow"]}.txt="{fl:.2f} L/min"')
-        nextion_send_command(f'{NEXTION_FIELDS["total"]}.txt="{tot:.3f} L"')
-        nextion_send_command(f'{NEXTION_FIELDS["power"]}.txt="{pw:.3f} kW"')
-        nextion_send_command(f'{NEXTION_FIELDS["energy"]}.txt="{en:.3f} kWh"')
-    except Exception as e:
-        logging.error("Error updating Nextion: %s", e)
-        
-"""
+# Nextion HMI update function is in flow_server.py
 
 # -------------------------------
 # Initialize MQTT
 # -------------------------------
-connect_mqtt()
+#connect_mqtt()
 
 def mqtt_thread():
     while True:
@@ -112,7 +88,7 @@ def mqtt_thread():
 
 threading.Thread(target=loop_powermeter, daemon=True).start()
 threading.Thread(target=pm_thread, daemon=True).start()
-threading.Thread(target=mqtt_thread, daemon=True).start()
+#threading.Thread(target=mqtt_thread, daemon=True).start()
 
 
 
